@@ -1,45 +1,13 @@
-ReadMe, bogs et Améliorations possibles
+Ce progarmme génère du html s'il trouve des fichiers de type jpg, png, gif, webp, audios, vidéos, pdf et zip dans la hierrarchie du dossier.
+On peut ainsi visualiser ces fichiers précédents via un navigateur web.
 
-INVOCATION
-Ouvrir un shell et se positionner dans le répertoire où il y a les photos. Taper montagephotos. C'est un alias. J'ai mis dans Unity un menu pour ouvrir le fichier de réglage : Reglages.rb.
-++++++++++++++++++++++++++++++++++++++++++
-Ce programme génère automatiquement hiérarchiquement le code html à partir de fichiers de type :
-	o Images ayant les suffixes jpg, jpeg et png en majuscules ou minuscules.
-	o PDF avec les suffixes pdf en majuscules ou minuscules.
-	o Archives avec les suffixes zip en majuscules ou minuscules.
-	o Audio ou vidéo avec n'importe quelle type d'extension car c'est l'entête qui est lue. 
-Le code généré pour les fichiers multimédias audio/video est du html5, ce qui signifie en 2014 que seuls les containers webm et mpeg4 sont pris en compte ; ils permettent le streaming, c'est-à-dire la visualisation directe.
+runHtmlPhotos.rb contient le programme principal.
 
-Le webm est préféré car libre d'utilisation.
+Il s'agit d'un petit utilitaire ruby, qui appelle à un moment donné des fonctions Unix/Linux.
 
-++++++++++++++++++++++++++++++++++++++++++
-BOGS et inconvénients
-1) tt.JPG et tt.png est un cas interdit car la racine du fichier est la même (tt, dans cet exemple). On devine bien qu'il va y avoir problème pour les tt.htm correspondant.
-2) Les fichiers audio et video doivent avoir un suffixe (peu importe lequel), sinon ils sont pris comme des répertoires.
-3) Les répertoires doivent avoir des noms sans suffixes.
-4) Les noms des fichiers et répertoires ne doivent comporter ni blancs ni accents.
-5) Ce n'est pas à proprement parler d'un bog, mais d'un inconvénient : La fonction RecipListe::typeAudio_ou_Video fait appel à des fonctionnalités de l'OS Unix (grep, awk, ...) et ne sera donc pas compatible avec des OS non UNIX comme Windows. On peut remplacer avconv par ffmpeg mais comment remplacer grep et awk ??
-6) Sur la page web, les audios/vidéos apparaissent en premier, puis les pdf ensuite les répertoires ou photos. Il y a uniquement un choix proposé pour faire apparaître les répertoires avant ou après les photos.
-++++++++++++++++++++++++++++++++++++++++++
+Il faudra décompresser Icones.tar.gz et copier ". Icones" dans le dossier de ses photos ou mettre ce dossier ". Icones" sur un serveur web, ce qui nécessitera de modifier ce programme Ruby en conséquence, car le serveur Orange ne fonctionne plus. 
 
-AMÉLIORATIONS
-1) La couleur de fond est paramétrable. Calculer un complément hexadécimal pour les valeurs de LINK='#000000' VLINK='#000000' ALINK='#000088' dans index.rb afin que ces liens soient toujours lisibles quelque soit la couleur de fond.
-2) Les icones et le fichier css peuvent être en local dans un répertoire ".Icones", à la racine du répertoire contenant les photos, ou sur un serveur. Il faudrait peut-être tester s'ils sont présents sur ce serveur ? Voir méthode ci-après ? Mais çà ne va pas fonctionner correctement s'il n'y a pas d'internet.
-require "net/http"
-def url_exist?(url_string)
-  url = URI.parse(url_string)
-  req = Net::HTTP.new(url.host, url.port)
-  res = req.request_head(url.path)
-  if res.kind_of?(Net::HTTPRedirection)
-    url_exist?(res['location']) # Go after any redirect and make sure you can access the redirected URL 
-  else
-    ! %W(4 5).include?(res.code[0]) # Not from 4xx or 5xx families
-  end
-rescue Errno::ENOENT
-  false #false if can't find the server
-end
-
-3) Faire un modulo pour n'avoir par exemple que 15 photos par page, la 16ème étant Suite même s'il n'y a pas physiquement un répertoire Suite.
-5) Cas où on dispose du même fichier vidéo sous plusieurs formats : webm, mp4 ou pour l'audio mp3, ogg .... Il y a une syntaxe spéciale en html5. Mais pourquoi se fatiguer à avoir plusieurs formats ?
-6) Dans Reglages.rb mettre Francais true ou false puis faire un fichier anglais et un autre francais avec les messages respectifs
-++++++++++++++++++++++++
+Les répertoires .VIGNETTES et .CALIBRAGE sont d'abord éventuellemnt effacés selon la configuration inscrite dans Reglages.rb, soit :
+		DELETE_CALIBRAGE = true
+		DELETE_VIGNETTES = false
+		REP_AVANT_IMAGES = false
