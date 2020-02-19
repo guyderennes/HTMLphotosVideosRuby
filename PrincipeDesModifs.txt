@@ -1,0 +1,21 @@
+
+La première modif dans http://www.disqueDepart.fr/chemin1/2010s/index.html se fait à la main. Il suffit d'y ajouter pour chaque année une ligne avec la référence vers http://www.autreDisque.fr/chemin2/2010s/2015/index.html. Ainsi à chaque fois une ligne de plus jusqu'à 2019. Ici nous avons pris 2015.
+
+La seconde est d'ajouter dans tous les http://www.autreDisque.fr/chemin2/2010s/2015/index.html de l'arborescence cette ligne :
+<A HREF='http://www.disqueDepart.fr/chemin1/2010s/index.html'>Départ</A>
+
+Remarque : 1) chemin1 et chemin2 peuvent être les mêmes ou non
+					 2) http://www.autreDisque.fr/chemin2/2010s/ ne comporte pas d'index.html, contrairement à son homologue dans disqueDepart qui lui pointe bien l'ensemble sur les 2 disques ...
+
+Il est donc nécessaire de modifier le générateur Ruby pour générer la référence au premier disque pour Départ : http://www.disqueDepart.fr/chemin1/2010s/index.html
+
+La génération du code continuera à se faire en local, comme avant avec mon alias montagephotos. La seule différence est qu'il faudra configurer Reglages.rb pour y inclure ou non http://www.disqueDepart.fr/chemin1/2010s/index.html pour Départ.
+
+00000000000000000000000000
+1) Dans Reglages.rb 		=> 		ajout de URL_DISK_DEPART et URL_AUTRE_DISK
+2) Dans Index.rb étudier def insere_enteteSimple où il y a D&eacute;part
+	if @urlDisqueDepart.empty?
+		@fich.puts "		<A HREF='../index.html'>Vignettes pr&eacute;c&eacute;dentes</A>  OU  <A HREF='#{@iconePathSave}index.html'>D&eacute;part</A>"
+	else
+		@fich.puts "		<A HREF='../index.html'>Vignettes pr&eacute;c&eacute;dentes</A>  OU  <A HREF='#{@urlDisqueDepart}index.html'>D&eacute;part</A>"
+	end
